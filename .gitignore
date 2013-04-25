@@ -1,0 +1,6 @@
+html/
+latex/
+python/
+*.h
+*.so
+*.pyf
