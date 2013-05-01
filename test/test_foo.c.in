@@ -1,0 +1,21 @@
+#include <CUnit/CUnit.h>
+#include <CUnit/Basic.h>
+#include "foo.h"
+
+void test_foo_one(void)
+{
+}
+
+int main(void) {
+  CU_pSuite s;
+
+  CU_initialize_registry();
+  s = CU_add_suite("foo", NULL, NULL);
+  CU_add_test(s, "test_one", test_foo_one);
+  CU_basic_set_mode(CU_BRM_VERBOSE);
+  CU_basic_run_tests();
+  CU_cleanup_registry();
+
+  return 0;
+}
+
