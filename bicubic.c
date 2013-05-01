@@ -8,7 +8,7 @@
  * Given the function values \f$f\f$ and its derivatives \f$f_x\f$, \f$f_y\f$ and \f$f_{xy}\f$
  * at four corners, the interpolated surface is given by
  * \f[
- * p(t,u) = \sum_{i=0}^{3}\sum_{j=0}^{3}a_{ij}x^iy^j
+ * p(t,u) = \sum_{i=0}^{3}\sum_{j=0}^{3}a_{ij}t^iu^j
  * \f]
  * The given function values and the derivatives matches those of the interpolated surface
  * at four corners to determine 16 coefficients.
@@ -22,17 +22,21 @@
  */
 #include "bicubic.h"
 
-void eno_bicubic_coeff /// calculate coeffients from the give function values and the derivatives
+/// calculate coeffients from the give function values and the derivatives
+void eno_bicubic_coeff
   (
     double f[16], /**< [in]  store counter clockwise from the bottom left:
                              (0, 0), (1, 0), (1, 1), (0, 1).
-                             f[ 0.. 3] = f,     f[ 4.. 7] = fx*dx,
-                             f[ 8..11] = fy*dy, f[12..15] = fxy*dx*dy */
+                             f[ 0.. 3] = \f$f\f$,
+                             f[ 4.. 7] = \f$f_x\Delta x\f$,
+                             f[ 8..11] = \f$f_y\Delta y\f$,
+                             f[12..15] = \f$f_{xy}\Delta x\Delta dy\f$
+                   */
     double c[16]  /**< [out] bicubic coefficients
-                   *          0: 1,     1: u,     2: u^2,     3: u^3,
-                   *          4: t,     5: tu,    6: tu^2,    7: tu^3
-                   *          8: t^2,   9: t^2u, 10: t^2u^2, 11: t^2u^3
-                   *         12: t^3u, 13: t^3u, 14: t^3u^2, 15: t^3u^3
+                   *          0: \f$1\f$,     1: \f$u\f$,     2: \f$u^2\f$,     3: \f$u^3\f$,
+                   *          4: \f$t\f$,     5: \f$tu\f$,    6: \f$tu^2\f$,    7: \f$tu^3\f$,
+                   *          8: \f$t^2\f$,   9: \f$t^2u\f$, 10: \f$t^2u^2\f$, 11: \f$t^2u^3\f$,
+                   *         12: \f$t^3u\f$, 13: \f$t^3u\f$, 14: \f$t^3u^2\f$, 15: \f$t^3u^3\f$
                    */
   )
 {
