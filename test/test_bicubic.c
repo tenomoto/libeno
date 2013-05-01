@@ -11,14 +11,21 @@ void test_bicubic(double f[16], double d[16], double g[5], double gx[5], double 
   double u[5] = {0.0, 0.0, 1.0, 1.0, 0.5};
   double p, px, py, pxy;
 
+#ifdef VERBOSE
+  printf("\n");
+  printf("coefficients\n");
+#endif
   eno_bicubic_coeff(f, c);
   for (int i=0; i<16; i++) {
     CU_ASSERT_EQUAL(c[i],d[i]);
+#ifdef VERBOSE
+    printf("c=%f, d=%f\n", c[i], d[i]);
+#endif
   }
 
-  printf("\n");
-  printf("coefficients\n");
+#ifdef VERBOSE
   printf("interpolate\n");
+#endif
   for (int i=0; i<5; i++) {
     p   = eno_bicubic_interpolate(c, t[i], u[i]);
     px  = eno_bicubic_interpolate_x(c, t[i], u[i]);
@@ -28,7 +35,9 @@ void test_bicubic(double f[16], double d[16], double g[5], double gx[5], double 
     CU_ASSERT_EQUAL(px,  gx[i]);
     CU_ASSERT_EQUAL(py,  gy[i]);
     CU_ASSERT_EQUAL(pxy, gxy[i]);
+#ifdef VERBOSE
     printf("t=%f, u=%f, p=%f, px=%f, py=%f, pxy=%f\n", t[i], u[i], p, px, py, pxy);
+#endif
   }
 }
 
