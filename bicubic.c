@@ -22,7 +22,7 @@
  */
 #include "bicubic.h"
 
-/// calculate coeffients from the give function values and the derivatives
+/// calculate coeffients from the given function values and the derivatives
 void eno_bicubic_coeff
   (
     double f[16], /**< [in]  store counter clockwise from the bottom left:
