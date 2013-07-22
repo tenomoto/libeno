@@ -13,7 +13,7 @@ DOXYGEN = doxygen
 MAKEHEADERS = makeheaders
 
 TARGET = libeno
-SRCS = alf.c bicubic.c biquadratic.c cubic_hermite.c endian.c
+SRCS = alf.c bicubic.c biquadratic.c cubic_hermite.c endian.c sphere.c
 OBJS = $(SRCS:.c=.o)
 HDRS = $(SRCS:.c=.h)
 

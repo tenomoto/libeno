@@ -4,6 +4,7 @@
 #include "alf.h"
 
 const int ntrunc = 5;
+double p00;
 alf_t *alf;
   
 void test_alf_cd(void)
@@ -52,9 +53,31 @@ void test_alf_efg(void) {
   }
 }
 
+void test_alf_ank(void) {
+  double ank[5];
+  
+  ank[0] = 2.0 * p00; // a0,0
+  ank[1] = sqrt(3.0) * p00; // a1,0
+  ank[2] = 0.75 * sqrt(5.0) * p00; // a2,2
+//  ank[3] = 0.25 * sqrt(5.0) * p00; // a2,0
+  ank[3] = ank[2]/3.0; // a2,0
+//  ank[4] = 0.625 * sqrt(7.0) * p00; // a3,3
+  ank[4] = sqrt(35.0/36.0) * ank[2]; // a3,3
+#ifdef VERBOSE
+  printf("\n");
+  for (int i=0; i < 5; i++) {
+    printf("%d %20.18f %20.18f %20.18f\n", i, alf->ank[i], ank[i], alf->ank[i]-ank[i]);
+  }
+#endif
+  CU_ASSERT_EQUAL(alf->ank[0], ank[0]);
+  CU_ASSERT_EQUAL(alf->ank[1], ank[1]);
+  CU_ASSERT_EQUAL(alf->ank[2], ank[2]);
+  CU_ASSERT_EQUAL(alf->ank[3], ank[3]);
+  CU_ASSERT_EQUAL(alf->ank[4], ank[4]);
+}
+
 void test_alf_ps(void)
 {
-  const double p00 = sqrt(0.5);
   double u = 0.5;
   double ps[ntrunc];
 
@@ -74,8 +97,9 @@ void test_alf_ps(void)
 
 int main(void) {
   CU_pSuite s;
-
-  alf = eno_alf_init(ntrunc);
+  
+  p00 = sqrt(0.5);
+  alf = eno_alf_init(ntrunc, p00);
 #ifdef VERBOSE
   printf("ntrunc=%d\n", alf->ntrunc);
 #endif
@@ -83,7 +107,8 @@ int main(void) {
   CU_initialize_registry();
   s = CU_add_suite("alf", NULL, NULL);
   CU_add_test(s, "test_cd", test_alf_cd);
-  CU_add_test(s, "test_efg", test_alf_cd);
+  CU_add_test(s, "test_efg", test_alf_efg);
+  CU_add_test(s, "test_ank", test_alf_ank);
   CU_add_test(s, "test_ps", test_alf_ps);
   CU_basic_set_mode(CU_BRM_VERBOSE);
   CU_basic_run_tests();

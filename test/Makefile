@@ -1,14 +1,15 @@
 .SUFFIXES : .o .c
 
 CC = clang
-CPPFLAGS = -I/opt/local/include -I../
+CPPFLAGS = -I/opt/local/include -I.. -DVERBOSE
 CFLAGS = -O2
-LDFLAGS = -L/opt/local/lib -L../
+LDFLAGS = -L/opt/local/lib -lcunit -L.. -leno
 RM = rm
-LIBS = -leno -lcunit
+PROGS = test_alf test_bicubic test_endian test_cubic_hermite test_biquadratic test_sphere
 
-test : test_bicubic
-	./$<
+all : $(PROGS)
 
-test_bicubic : test_bicubic.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBS) $< -o $@
+$(PROGS) : ../libeno.dylib
+
+clean :
+	rm -f $(PROGS)
