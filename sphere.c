@@ -24,7 +24,7 @@ double eno_sphere_orthodrome(double lon1, double colat1, double lon2, double col
 }
 
 int eno_sphere_helix(int n, double *lon, double *colat) {
-  int k = sqrt(n);
+  double k = sqrt(n);
   double d = 2.0/(n-1);
   double pi2 = 2.0*M_PI;
   for (int i=0; i<n; i++) {
