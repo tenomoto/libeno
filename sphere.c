@@ -3,16 +3,6 @@
  * @file: sphere.c
  * @author: Takeshi Enomoto
  *
- * eno_spherical_helix() generates longitudes \f$\lambda\f$ and
- * colatitudes \f$\theta\f$ of length n with the following equation (Nisho et al 2006).
- * \f[
- *   \lambda = \mod(2k\theta, 2\pi)
- * \f]
- *
- * Here \f$\cos\theta\f$ is equally spaced between \f$-1\f$ and \f$1\f$.
- * NB. Nishio et al. 2006 uses the length of the helix divided by n-1,
- * where n is the number of grid points.
- *
  * # Refereces
  * - Bauer, R., 2000: Distribution of points on a sphere with application to star catalogs. J. Guid. Control. Dyn., 23, 130--137.
  * - Saff, E. B. and A. B. J. Kuijlaars, 1997: Distributing many points on a sphere. Math. Intelligencer, 19, 5--11.
