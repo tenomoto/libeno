@@ -14,15 +14,17 @@
 #include "alf.h"
 #include <stdio.h>
 
+/// calculates c, d for diagonal starting values
 static void calc_cd(double c[], double d[], int ntrunc)
 {
   c[0] = sqrt(3.0);
-  for (int m = 1; m < ntrunc+1; m++) {
+  for (int m = 1; m < ntrunc + 1; m++) {
     c[m] = sqrt(2.0 * m + 3.0);
     d[m] = sqrt(1.0 + 0.5/m);
   }
 }
 
+/// calculates e, f, g in the four-point recurrence
 static void calc_efg(double e[], double f[], double g[], int ntrunc)
 {
   int k = 0;
@@ -50,9 +52,33 @@ static void calc_efg(double e[], double f[], double g[], int ntrunc)
   }
 }
 
+/// calculates Fourier coefficients
+static void calc_ank(double p0, double ank[], int ntrunc)
+{
+  ank[0] = 2.0 * p0;
+  ank[1] = sqrt(3.0) * p0; // sqrt(1-1/4) * 2 * p0
+  int i = 2;
+  for (int n = 2; n < ntrunc + 1; n++) {
+    int np = (n - 1) / 2 + 1;
+    int nh = n / 2;
+    ank[i] = sqrt(1.0 - 1.0 / (4.0 * n * n)) * ank[i - np];
+    i++;
+    for (int lh = 1; lh < nh + 1; lh++) {
+      int l = 2 * lh;
+      int n2l = 2 * n - l;
+      ank[i] = (l - 1.0)*(n2l + 2.0) / (l * (n2l + 1.0)) * ank[i - 1];
+      i++;
+    }
+    if (n == nh*2) { // a(n,0) coefficient of $\cos 0\theta$ is halved
+      ank[i - 1] = 0.5 * ank[i - 1];
+    }
+  }
+}
+
 alf_t *eno_alf_init
 (
-  int ntrunc ///< [in] truncation wave number
+  int ntrunc, ///< [in] truncation wave number
+  double p00  ///< [in] start value affecting normalization
 )
 {
   alf_t *alf;
@@ -60,17 +86,22 @@ alf_t *eno_alf_init
   alf = (alf_t *)malloc(sizeof(alf_t));
   
   alf->ntrunc = ntrunc;
+  alf->p00 = p00;
 
   int ntrunc1 = ntrunc + 1;
-  alf->c = (double *)malloc(sizeof(double)*(ntrunc1));
-  alf->d = (double *)malloc(sizeof(double)*(ntrunc1));
+  alf->c = (double *)malloc(sizeof(double) * ntrunc1);
+  alf->d = (double *)malloc(sizeof(double) * ntrunc1);
   calc_cd(alf->c, alf->d, alf->ntrunc);
 
-  int nn = ntrunc1*(ntrunc1+1)/2;
-  alf->e = (double *)malloc(sizeof(double)*nn);
-  alf->f = (double *)malloc(sizeof(double)*nn);
-  alf->g = (double *)malloc(sizeof(double)*nn);
+  int nn = ntrunc1 * (ntrunc1 + 1) / 2;
+  alf->e = (double *)malloc(sizeof(double) * nn);
+  alf->f = (double *)malloc(sizeof(double) * nn);
+  alf->g = (double *)malloc(sizeof(double) * nn);
   calc_efg(alf->e, alf->f, alf->g, alf->ntrunc);
+
+  int nh = ntrunc / 2;
+  alf->ank = (double *)malloc(sizeof(double) * (nh + 2) * (nh + 1));
+  calc_ank(p00, alf->ank, ntrunc);
 
   return alf;
 }
@@ -102,6 +133,6 @@ void eno_alf_clean(alf_t *alf)
   free(alf->e);
   free(alf->f);
   free(alf->g);
-//  free(alf->h);
+  free(alf->ank);
   free(alf);
 }
