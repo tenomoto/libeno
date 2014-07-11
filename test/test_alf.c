@@ -5,7 +5,7 @@
 
 const int ntrunc = 5;
 double p00;
-alf_t *alf;
+eno_alf_t *alf;
   
 void test_alf_cd(void)
 {

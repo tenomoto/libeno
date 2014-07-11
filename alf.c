@@ -75,15 +75,15 @@ static void calc_ank(double p0, double ank[], int ntrunc)
   }
 }
 
-alf_t *eno_alf_init
+eno_alf_t *eno_alf_init
 (
   int ntrunc, ///< [in] truncation wave number
   double p00  ///< [in] start value affecting normalization
 )
 {
-  alf_t *alf;
+  eno_alf_t *alf;
 
-  alf = (alf_t *)malloc(sizeof(alf_t));
+  alf = (eno_alf_t *)malloc(sizeof(eno_alf_t));
   
   alf->ntrunc = ntrunc;
   alf->p00 = p00;
@@ -109,7 +109,7 @@ alf_t *eno_alf_init
 void eno_alf_calcps
 /// calculates sectional harmonics pmm[1..ntrunc]
   (
-    alf_t *alf, ///< [in]  coefficients
+    eno_alf_t *alf, ///< [in]  coefficients
     double u,   ///< [in]  coslat
     double ps[] ///< [inout] in: pmm[0], out: pmm[1..ntrunc]
   )
@@ -126,7 +126,7 @@ void eno_alf_calcps
   }
 }
 
-void eno_alf_clean(alf_t *alf)
+void eno_alf_clean(eno_alf_t *alf)
 {
   free(alf->c);
   free(alf->d);

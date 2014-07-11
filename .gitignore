@@ -2,5 +2,7 @@ html/
 latex/
 python/
 *.h
+!alf_type.h
+!sigmap_type.h
 *.so
 *.pyf
