@@ -4,8 +4,8 @@
 
 void test_emath_mod(void)
 {
-  CU_ASSERT_EQUAL(eno_emath_mod( 1.0, 3.0), 1.0);
-  CU_ASSERT_EQUAL(eno_emath_mod(-1.0, 3.0), 2.0);
+  CU_ASSERT_EQUAL(FMOD( 1.0, 3.0), 1.0);
+  CU_ASSERT_EQUAL(FMOD(-1.0, 3.0), 2.0);
 }
 
 int main(void) {
