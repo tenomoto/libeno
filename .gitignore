@@ -7,3 +7,4 @@ python/
 !*_type.h
 *.so
 *.pyf
+*.gcx
