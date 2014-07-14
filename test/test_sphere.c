@@ -50,7 +50,7 @@ void test_sphere_fibonacci(void)
   for (int i; i<n; i++) {
     double h = 1.0 - (2.0*i+1.0)/n;
     CU_ASSERT_EQUAL(colat[0], acos(h));
-    CU_ASSERT_EQUAL(lon[0], eno_emath_mod(-m*h,2*M_PI));
+    CU_ASSERT_EQUAL(lon[0], FMOD(-m*h,2*M_PI));
   }
 }
 
