@@ -10,7 +10,6 @@
  */
 #include <stdio.h>
 #include <math.h>
-#include "emath.h"
 #include "sphere.h"
 
 double eno_sphere_orthodrome(double lon1, double colat1, double lon2, double colat2) {

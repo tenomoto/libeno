@@ -2,6 +2,8 @@ html/
 latex/
 python/
 *.h
+!emath.h
+!*_defs.h
 !*_type.h
 *.so
 *.pyf

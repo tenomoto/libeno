@@ -3,7 +3,7 @@
  * @file: moist.c
  * @author: Takeshi Enomoto
  */
-#include "air.h"
+#include "moist.h"
 
 /// calculate virtual temperature
 double eno_moist_calc_Tv

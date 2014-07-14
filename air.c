@@ -3,6 +3,7 @@
  * @file: air.c
  * @author: Takeshi Enomoto
  */
+#include "air.h"
 const double eno_air_Rd =  287.0;   /// gas constant of dry air, J/deg/kg
 const double eno_air_cp = 1004.0;   /// specific heat at constant pressure, J/deg/kg
 const double eno_air_cv =  717.0;   /// specific heat at constant volume, J/deg/kig

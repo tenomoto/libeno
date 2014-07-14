@@ -10,7 +10,6 @@
  */
 #include <stdlib.h>
 #include <math.h>
-#include "air.h"
 #include "sigmap.h"
 
 eno_sigmap_t *eno_sigmap_init /// allocate structure and associated arrays
