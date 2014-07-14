@@ -22,7 +22,7 @@ int eno_sphere_helix(int n, double *lon, double *colat) {
 
   for (int i=0; i<n; i++) {
     colat[i] = acos(1.0-(2.0*i+1.0)/n);
-    lon[i] = eno_emath_mod(k * colat[i], 2*M_PI);
+    lon[i] = FMOD(k * colat[i], 2*M_PI);
   }
   return 0;
 }
@@ -37,7 +37,7 @@ int eno_sphere_generalized_spiral(int n, double *lon, double *colat) {
   for (int k=1; k<n-1; k++) {
     hk = -1.0 + 2.0*k/(n - 1.0);
     colat[k] = acos(hk);
-    lon[k] = eno_emath_mod(lon[k-1] + c/sqrt(n*(1.0-hk*hk)), 2*M_PI);
+    lon[k] = FMOD(lon[k-1] + c/sqrt(n*(1.0-hk*hk)), 2*M_PI);
   }
   colat[n-1] = acos(1.0);
   lon[n-1] = 0.0;
@@ -52,7 +52,7 @@ printf("phir = %f m = %f\n", phir, m);
   for (int i=0; i<n; i++) {
     double h = 1.0 - (2.0*i+1.0)/n;
     colat[i] = acos(h);
-    lon[i] = eno_emath_mod(-m*h, 2*M_PI);
+    lon[i] = FMOD(-m*h, 2*M_PI);
 printf("i = %d h = %f -mh = %f lon = %f\n", i, h, -m*h, lon[i]);
   }
   return 0;
