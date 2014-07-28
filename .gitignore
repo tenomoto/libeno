@@ -8,3 +8,7 @@ python/
 *.so
 *.pyf
 *.gcx
+*.dylib
+*.f90
+makeheaders
+test_*
