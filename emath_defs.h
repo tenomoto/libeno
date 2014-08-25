@@ -1,0 +1,6 @@
+#define FMOD(X,Y) ((X) - (Y) * floor((X)/(Y)))
+#define MAX(X,Y) ((X) > (Y) ? (X) : (Y))
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+#define SIGN(X)  ((X) > 0 ? 1 : -1)
+#define EQV(X,Y) (((X) && (Y)) || (!(X) && !(Y)))
+#define XOR(X,Y) (((X) && !(Y)) || (!(X) && (Y)))
