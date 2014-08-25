@@ -14,9 +14,19 @@
  * l_i(x) = \prod_{m=0,m\neq i}^3\frac{x-x_m}{x_i-x_0}
  * \f]
  *
+ * Let \f$P_0 = y_0, P_1 = y_1, P_2 = y_2, P_3 = y_3\f$ (constant),
+ * \f$P_{01}, P_{12}, P_{23}\f$ (linear),
+ * \f$P_{012}, P_{123}\f$ (quadratic) \f$P_{0123}\f$ (cubic).
+ *
+ * \f[
+ * P_{i(i+1)...(i+m) = \frac{(x-x_{i+m})P_{i(i+1)...(i+m-1)} + 
+ *                     (x_i-x)P_{(i+1)(i+2)...(i+m)}}{x_i-x_{i+m}}
+ * \f]
+ *
  * # Reference
  *
  * - [Lagrange polynomial](http://en.wikipedia.org/wiki/Lagrange_polynomial)
+ * - [Neville's algorithm](http://en.wikipedia.org/wiki/Neville's_algorithm)
  */
 #include "cubic_hermite.h"
 
