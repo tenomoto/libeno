@@ -2,7 +2,6 @@ html/
 latex/
 python/
 *.h
-!emath.h
 !*_defs.h
 !*_type.h
 *.so
@@ -12,3 +11,4 @@ python/
 *.f90
 makeheaders
 test_*
+!test_*.c
