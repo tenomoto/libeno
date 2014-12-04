@@ -14,7 +14,8 @@ MAKEHEADERS = makeheaders
 
 TARGET = libeno
 SRCS = air.c earth.c isa.c alf.c bicubic.c biquadratic.c cubic_hermite.c endian.c \
-  sphere.c sigmap.c moist.c extrapolate.c search.c cubic_lagrange.c xreal.c emath.c
+  sphere.c sigmap.c moist.c extrapolate.c search.c cubic_lagrange.c xreal.c emath.c \
+  xreal_struct.c
 OBJS = $(SRCS:.c=.o)
 HDRS = $(SRCS:.c=.h)
 

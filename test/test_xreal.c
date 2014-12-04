@@ -17,10 +17,9 @@ void  test_xreal()
 
   double f = 3.0e100;
   double g = 5.0e99;
-  xp = f;
-  xi = 0;
-  yp = g;
-  yi = 0;
+
+  eno_xreal_assign_f(f, &xp, &xi);
+  eno_xreal_assign_f(g, &yp, &yi);
   printf("f=%e xp=%e xi=%d, g=%e, yp=%e yi=%d\n", f, xp, xi, g, yp, yi);
 
   eno_xreal_mul(xp, xi, yp, yi, &zp, &zi);
