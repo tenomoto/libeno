@@ -13,245 +13,232 @@
 
 #include "xreal.h"
 
-double eno_xreal_big()
-{
-    return BIG;
-}
+double eno_xreal_big() { return BIG; }
+double eno_xreal_bigi() { return BIGI; }
+double eno_xreal_bigs() { return BIGS; }
+double eno_xreal_bigsi() { return BIGSI; }
 
-double eno_xreal_bigi()
+void eno_xreal_norm(xreal_t *x)
 {
-    return BIGI;
-}
-
-double eno_xreal_bigs()
-{
-    return BIGS;
-}
-
-double eno_xreal_bigsi()
-{
-    return BIGSI;
-}
- 
-void eno_xreal_norm(double *p, int *i)
-{
-  double w = fabs(*p);
+  double w = fabs(x->p);
   if (w >= BIGS) {
-    *p *= BIGI;
-    ++*i;
+    x->p *= BIGI;
+    ++x->i;
   } else if (w < BIGSI) {
-    *p *= BIG;
-    --*i;
+    x->p *= BIG;
+    --x->i;
   }
 }
 
-void eno_xreal_assign_f(double f, double *p, int *i)
+void eno_xreal_assign_f(double f, xreal_t *x)
 {
-  *p = f;
-  *i = 0;
+  x->p = f;
+  x->i = 0;
 }
 
-void eno_xreal_assign_x(double xp, int xi, double *yp, int *yi)
+void eno_xreal_assign_x(xreal_t x, xreal_t *y)
 {
-  *yp = xp;
-  *yi = xi;
-  eno_xreal_norm(yp, yi);
+  y->p = x.p;
+  y->i = x.i;
+  eno_xreal_norm(y);
 }
 
-double eno_xreal_eval(double p, int i)
+double eno_xreal_eval(xreal_t x)
 {
-  if (i == 0) {
-    return p;
-  } else if (i < 0) { // underflow
-    return p * BIGI;
+  eno_xreal_norm(&x);
+  if (x.i == 0) {
+    return x.p;
+  } else if (x.i < 0) { // underflow
+    return x.p * BIGI;
   } else {            // overflow i > 0
-    return p * BIG;
+    return x.p * BIG;
   }
 }
 
-void eno_xreal_fxpgy
-(
-  double f,
-  double xp, int xi,
-  double g,
-  double yp, int yi,
-  double *zp, int *zi)
+void eno_xreal_fxpgy(double f, xreal_t x, double g, xreal_t y, xreal_t *z)
 {
-  int id = xi - yi;
+  int id = x.i - y.i;
+
   if (id == 0) {
-    *zp = f * xp + g * yp;
-    *zi = xi;
+    z->p = f * x.p + g * y.p;
+    z->i = x.i;
   } else if (id == 1) {
-    *zp = f * xp + g * BIGI * yp;
-    *zi = xi;
+    z->p = f * x.p + g * BIGI * y.p;
+    z->i = x.i;
   } else if (id == -1) {
-    *zp = f * BIGI * xp + g * yp;
-    *zi = yi;
+    z->p = f * BIGI * x.p + g * y.p;
+    z->i = y.i;
   } else if (id > 1) {
-    *zp = f * xp;
-    *zi = xi;
+    z->p = f * x.p;
+    z->i = x.i;
   } else { // id < 1
-    *zp = g * yp;
-    *zi = yi;
+    z->p = g * y.p;
+    z->i = y.i;
   }
-  eno_xreal_norm(zp, zi);
+  eno_xreal_norm(z);
 }
 
-void eno_xreal_mul(double xp, int xi, double yp, int yi, double *zp, int *zi)
+void eno_xreal_mul(xreal_t x, xreal_t y, xreal_t *z)
 {
-  double sp; int si;
+  xreal_t s;
 
-  eno_xreal_assign_x(xp, xi, zp, zi);
-  eno_xreal_norm(zp, zi);
-  eno_xreal_assign_x(yp, yi, &sp, &si);
-  eno_xreal_norm(&sp, &si);
-  *zp = *zp * sp;
-  *zi = *zi + si;
-  eno_xreal_norm(zp, zi);
+  eno_xreal_assign_x(x, z);
+  eno_xreal_norm(z);
+  eno_xreal_assign_x(y, &s);
+  eno_xreal_norm(&s);
+  z->p = z->p * s.p;
+  z->i = z->i + s.i;
+  eno_xreal_norm(z);
 }
 
-void eno_xreal_fx(double f, double xp, int xi, double *zp, int *zi)
+void eno_xreal_fx(double f, xreal_t x, xreal_t *y)
 {
-  eno_xreal_norm(&xp, &xi);
-  *zp = f * xp;
-  *zi = xi;
-  eno_xreal_norm(zp, zi);
+  eno_xreal_norm(&x);
+  y->p = f * x.p;
+  y->i = x.i;
+  eno_xreal_norm(y);
 }
 
-void eno_xreal_div(double xp, int xi, double yp, int yi, double *zp, int *zi)
+void eno_xreal_div(xreal_t x, xreal_t y, xreal_t *z)
 {
-  double sp; int si;
+  xreal_t s;
 
-  eno_xreal_assign_x(xp, xi, zp, zi);
-  eno_xreal_norm(zp, zi);
-  eno_xreal_assign_x(yp, yi, &sp, &si);
-  eno_xreal_norm(&sp, &si);
-  *zp = *zp / sp;
-  *zi = *zi - si;
-  eno_xreal_norm(zp, zi);
+  eno_xreal_assign_x(x, z);
+  eno_xreal_norm(z);
+  eno_xreal_assign_x(y, &s);
+  eno_xreal_norm(&s);
+  z->p = z->p / s.p;
+  z->i = z->i - s.i;
+  eno_xreal_norm(z);
 }
 
-void eno_xreal_fxr(double f, double xp, int xi, double *yp, int *yi)
+void eno_xreal_fxr(double f, xreal_t x, xreal_t *y)
 {
-  eno_xreal_norm(&xp, &xi);
-  *yp = f / xp;
-  *yi = xi;
-  eno_xreal_norm(yp, yi);
+  eno_xreal_norm(&x);
+  y->p = f / x.p;
+  y->i = x.i;
+  eno_xreal_norm(y);
 }
 
-void eno_xreal_ipow(double xp, int xi, int n, double *yp, int *yi)
+void eno_xreal_ipow(xreal_t x, int n, xreal_t *y)
 {
-  double f = 1.0;
-  double zp; int zi;
+  xreal_t z;
 
-  eno_xreal_assign_f(1.0, yp, yi);
-  eno_xreal_assign_x(xp, xi, &zp, &zi);
-  eno_xreal_norm(&zp, &zi);
+  eno_xreal_assign_f(1.0, y);
+  eno_xreal_assign_x(x, &z);
+  eno_xreal_norm(&z);
   if (n < 0) {
-    eno_xreal_fxr(f, xp, xi, &zp, &zi);
+    eno_xreal_fxr(1.0, x, &z);
     n = -n;
   }
   do {
     if (n & 1) {
-      eno_xreal_mul(*yp, *yi, zp, zi, yp, yi);
+      eno_xreal_mul(*y, z, y);
     }
     n >>= 1;
-    eno_xreal_mul(zp, zi, zp, zi, &zp, &zi);
+    eno_xreal_mul(z, z, &z);
   } while (n);
-  eno_xreal_norm(yp, yi);
+  eno_xreal_norm(y);
 }
 
-void eno_xreal_add(double xp, int xi, double yp, int yi, double* zp, int *zi)
+void eno_xreal_add(xreal_t x, xreal_t y, xreal_t *z)
 {
-  eno_xreal_fxpgy(1.0, xp, xi, 1.0, yp, yi, zp, zi);
+  eno_xreal_fxpgy(1.0, x, 1.0, y, z);
 }
 
-void eno_xreal_sub(double xp, int xi, double yp, int yi, double* zp, int *zi)
+void eno_xreal_sub(xreal_t x, xreal_t y, xreal_t *z)
 {
-  eno_xreal_fxpgy(1.0, xp, xi, -1.0, yp, yi, zp, zi);
+  eno_xreal_fxpgy(1.0, x, -1.0, y, z);
 }
 
-bool eno_xreal_eq(double xp, int xi, double yp, int yi)
+bool eno_xreal_eq(xreal_t x, xreal_t y)
 {
-  eno_xreal_norm(&xp, &xi);
-  eno_xreal_norm(&yp, &yi);
-  return (xp == yp) && (xi == yi);
+  eno_xreal_norm(&x);
+  eno_xreal_norm(&y);
+  return (x.p == y.p) && (x.i == y.i);
 }
 
-bool eno_xreal_ne(double xp, int xi, double yp, int yi)
+bool eno_xreal_ne(xreal_t x, xreal_t y)
 {
-  eno_xreal_norm(&xp, &xi);
-  eno_xreal_norm(&yp, &yi);
-  return (xp != yp) || (xi != yi);
+  eno_xreal_norm(&x);
+  eno_xreal_norm(&y);
+  return (x.p != y.p) || (x.i != y.i);
 }
 
-bool eno_xreal_gt(double xp, int xi, double yp, int yi)
+bool eno_xreal_gt(xreal_t x, xreal_t y)
 {
   bool l;
-  if (xi == yi) {
-    l = xp > yp;
+  eno_xreal_norm(&x);
+  eno_xreal_norm(&y);
+  if (x.i == y.i) {
+    l = x.p > y.p;
   } else {
-    l = xi > yi;
+    l = x.i > y.i;
   }
-  if (xp * yp < 0) {
+  if (x.p * y.p < 0) {
     l = !l;
   }
   return l;
 }
 
-bool eno_xreal_ge(double xp, int xi, double yp, int yi)
+bool eno_xreal_ge(xreal_t x, xreal_t y)
 {
   bool l;
-  if (xi == yi) {
-    l = xp >= yp;
+  eno_xreal_norm(&x);
+  eno_xreal_norm(&y);
+  if (x.i == y.i) {
+    l = x.p >= y.p;
   } else {
-    l = xi >= yi;
+    l = x.i >= y.i;
   }
-  if (xp * yp < 0) {
+  if (x.p * y.p < 0) {
     l = !l;
   }
   return l;
 }
 
-
-bool eno_xreal_lt(double xp, int xi, double yp, int yi)
+bool eno_xreal_lt(xreal_t x, xreal_t y)
 {
   bool l;
-  if (xi == yi) {
-    l = xp < yp;
+  eno_xreal_norm(&x);
+  eno_xreal_norm(&y);
+  if (x.i == y.i) {
+    l = x.p < y.p;
   } else {
-    l = xi < yi;
+    l = x.i < y.i;
   }
-  if (xp * yp < 0) {
+  if (x.p * y.p < 0) {
     l = !l;
   }
   return l;
 }
 
-bool eno_xreal_le(double xp, int xi, double yp, int yi)
+bool eno_xreal_le(xreal_t x, xreal_t y)
 {
   bool l;
-  if (xi == yi) {
-    l = xp <= yp;
+  eno_xreal_norm(&x);
+  eno_xreal_norm(&y);
+  if (x.i == y.i) {
+    l = x.p <= y.p;
   } else {
-    l = xi <= yi;
+    l = x.i <= y.i;
   }
-  if (xp * yp < 0) {
+  if (x.p * y.p < 0) {
     l = !l;
   }
   return l;
 }
 
-void eno_xreal_base10(double xp, int xi, double *yp, int *yi)
+void eno_xreal_base10(xreal_t x, xreal_t *y)
 {
   int i10 = lround(log10(BIG));
   double p10 = BIG * ipow(10.0, -i10);
 
-  *yp = xp;
-  *yi = xi;
-  if (xi != 0) {
-    *yi = lround(log10(fabs(xp)));
-    *yp = (xp * ipow(10.0, -*yi)) * ipow(p10, xi);
-    *yi = *yi + i10 * xi;
+  y->p = x.p;
+  y->i = x.i;
+  if (x.i != 0) {
+    y->i = lround(log10(fabs(x.p)));
+    y->p = (x.p * ipow(10.0, -y->i)) * ipow(p10, x.i);
+    y->i = y->i + i10 * x.i;
   }
 }

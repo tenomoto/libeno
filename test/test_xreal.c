@@ -1,12 +1,12 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include "xreal.h"
 
 void  test_xreal()
 {
-  double xp, yp, zp, wp, vp;
-  int   xi, yi, zi, wi, vi;
+  xreal_t x, y, z, w, v;
 
   printf("----- xreal_test() -----\n");
 
@@ -17,63 +17,64 @@ void  test_xreal()
 
   double f = 3.0e100;
   double g = 5.0e99;
+  eno_xreal_assign_f(f, &x);
+  eno_xreal_assign_f(g, &y);
+  printf("f=%e x.p=%e x.i=%d, g=%e, y.p=%e y.i=%d\n", f, x.p, x.i, g, y.p, y.i);
 
-  eno_xreal_assign_f(f, &xp, &xi);
-  eno_xreal_assign_f(g, &yp, &yi);
-  printf("f=%e xp=%e xi=%d, g=%e, yp=%e yi=%d\n", f, xp, xi, g, yp, yi);
+  eno_xreal_norm(&x);
 
-  eno_xreal_mul(xp, xi, yp, yi, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("x*y=%e %d %e %d\n", zp, zi, wp, wi);
+  eno_xreal_mul(x, y, &z);
+  eno_xreal_base10(z, &w);
+  printf("x*y=%e %d %e %d\n", z.p, z.i, w.p, w.i);
 
-  eno_xreal_add(xp, xi, yp, yi, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("x+y=%e %d %e %d\n", zp, zi, wp, wi);
+  eno_xreal_add(x, y, &z);
+  eno_xreal_base10(z, &w);
+  printf("x+y=%e %d %e %d\n", z.p, z.i, w.p, w.i);
 
-  eno_xreal_sub(xp, xi, yp, yi, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("x-y=%e %d %e %d\n", zp, zi, wp, wi);
+  eno_xreal_sub(x, y, &z);
+  eno_xreal_base10(z, &w);
+  printf("x-y=%e %d %e %d\n", z.p, z.i, w.p, w.i);
 
-  eno_xreal_div(xp, xi, yp, yi, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("x/y=%e %d %e %d\n", zp, zi, wp, wi);
+  eno_xreal_div(x, y, &z);
+  eno_xreal_base10(z, &w);
+  printf("x/y=%e %d %e %d\n", z.p, z.i, w.p, w.i);
 
-  eno_xreal_fxpgy(f, xp, xi, g, yp, yi, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("fx+gy=%e %d %e %d\n", zp, zi, wp, wi);
+  eno_xreal_fxpgy(f, x, g, y, &z);
+  eno_xreal_base10(z, &w);
+  printf("fx+gy=%e %d %e %d\n", z.p, z.i, w.p, w.i);
 
-  eno_xreal_mul(xp, xi, xp, xi, &zp, &zi);
-  eno_xreal_mul(zp, zi, xp, xi, &zp, &zi);
-  eno_xreal_mul(zp, zi, xp, xi, &zp, &zi);
-  eno_xreal_mul(zp, zi, xp, xi, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("x*x*x*x*x=%e %d %e %d\n", zp, zi, wp, wi);
-  eno_xreal_ipow(xp, xi, 5, &zp, &zi);
-  eno_xreal_base10(zp, zi, &vp, &vi);
-  printf("pow(x,5)=%e %d %e %d\n", zp, zi, vp, vi);
-  printf("wp - vp=%e wi-vi=%d\n", wp-vp, wi-vi);
-  CU_ASSERT_EQUAL(wp, vp)
-  CU_ASSERT_EQUAL(wi, vi)
+  eno_xreal_mul(x, x, &z);
+  eno_xreal_mul(z, x, &z);
+  eno_xreal_mul(z, x, &z);
+  eno_xreal_mul(z, x, &z);
+  eno_xreal_base10(z, &w);
+  printf("x*x*x*x*x=%e %d %e %d\n", z.p, z.i, w.p, w.i);
+  eno_xreal_ipow(x, 5, &z);
+  eno_xreal_base10(z, &v);
+  printf("pow(x,5)=%e %d %e %d\n", z.p, z.i, v.p, v.i);
+  printf("wp-vp=%e wi-vi=%d\n", w.p-v.p, w.i-v.i);
+  CU_ASSERT_EQUAL(w.p, v.p)
+  CU_ASSERT_EQUAL(w.i, v.i)
 
-  eno_xreal_ipow(xp, xi, -2, &zp, &zi);
-  eno_xreal_base10(zp, zi, &wp, &wi);
-  printf("pow(x,-2)=%e %d %e %d\n", zp, zi, wp, wi);
+  eno_xreal_ipow(x, -2, &z);
+  eno_xreal_base10(z, &w);
+  printf("pow(x,-2)=%e %d %e %d\n", z.p, z.i, w.p, w.i);
 
-  eno_xreal_ipow(xp, xi, 3, &zp, &zi);
-  printf("x**3==y %d\n", eno_xreal_eq(zp, zi, yp, yi));
-  CU_ASSERT_EQUAL(eno_xreal_eq(zp, zi, yp, yi), false);
-  printf("x**3/=y %d\n", eno_xreal_ne(zp, zi, yp, yi));
-  CU_ASSERT_EQUAL(eno_xreal_ne(zp, zi, yp, yi), true);
-  printf("x**3>y %d\n", eno_xreal_gt(zp, zi, yp, yi));
-  CU_ASSERT_EQUAL(eno_xreal_gt(zp, zi, yp, yi), true);
-  printf("x**3>=y %d\n", eno_xreal_ge(zp, zi, yp, yi));
-  CU_ASSERT_EQUAL(eno_xreal_ge(zp, zi, yp, yi), true);
-  printf("x**3>=x**3 %d\n", eno_xreal_ge(zp, zi, zp, zi));
-  CU_ASSERT_EQUAL(eno_xreal_ge(zp, zi, zp, zi), true);
-  printf("x**3<y %d\n", eno_xreal_lt(zp, zi, yp, yi));
-  CU_ASSERT_EQUAL(eno_xreal_lt(zp, zi, yp, yi), false);
-  printf("x**3<=y %d\n", eno_xreal_le(zp, zi, yp, yi));
-  CU_ASSERT_EQUAL(eno_xreal_le(zp, zi, yp, yi), false);
+  eno_xreal_ipow(x, 3, &z);
+  printf("x**3==y %d\n", eno_xreal_eq(z, y));
+  CU_ASSERT_EQUAL(eno_xreal_eq(z, y), false);
+  printf("x**3/=y %d\n", eno_xreal_ne(z, y));
+  CU_ASSERT_EQUAL(eno_xreal_ne(z, y), true);
+  printf("x**3>y %d\n", eno_xreal_gt(z, y));
+  CU_ASSERT_EQUAL(eno_xreal_gt(z, y), true);
+  printf("x**3>=y %d\n", eno_xreal_ge(z, y));
+  CU_ASSERT_EQUAL(eno_xreal_ge(z, y), true);
+  printf("x**3>=x**3 %d\n", eno_xreal_ge(z, z));
+  CU_ASSERT_EQUAL(eno_xreal_ge(z, z), true);
+  printf("x**3<y %d\n", eno_xreal_lt(z, y));
+  CU_ASSERT_EQUAL(eno_xreal_lt(z, y), false);
+  printf("x**3<=y %d\n", eno_xreal_le(z, y));
+  CU_ASSERT_EQUAL(eno_xreal_le(z, y), false);
 }
 
 int main(void) {
