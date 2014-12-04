@@ -1,4 +1,4 @@
-/// calculates normalized associated Legendre functions
+/// Functions to calculate normalized associated Legendre functions
 /*
  * @file alf.c
  * @author Takeshi Enomoto

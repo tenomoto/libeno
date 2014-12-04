@@ -1,4 +1,4 @@
-/// extrapolate below surface
+/// Extrapolation below surface
 /*
  * @file: extrapolate.c
  * @author: Takeshi Enomoto

@@ -1,4 +1,4 @@
-/// constants of the Earth
+/// Constants of the Earth
 /*
  * @file: earth.c
  * @author: Takeshi Enomoto

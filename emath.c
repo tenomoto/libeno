@@ -1,3 +1,4 @@
+/// emath.c: Math functions missing in C
 #include <stdbool.h>
 #include <math.h>
 #include "emath.h"
