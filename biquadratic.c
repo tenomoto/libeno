@@ -13,10 +13,11 @@
  * The given function values match those of the interpolated surface
  * at four corners, middle points and cell centre to determine 9 coefficients.
  *
- * # Reference
+ * f = c0 + c1 y + c2 y^2 + c3 x + c4 xy + c5 xy^2 + c6 x^2 + c7 x^2 y + c8 x^2 y^2
+ * f = A c, c = inv(A) f
  *
- * - [What's the point? Interpolation and extrapolation with a regular grid DEM](http://www.geocomputation.org/1999/082/gc_082.htm)
- *  
+ * inv(A) is calculated with Octave code  biquadratic.m 
+ *
  */
 #include "biquadratic.h"
 
