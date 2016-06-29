@@ -6,11 +6,11 @@
  * # Algorithm
  *
  * Given the function values \f$f\f$ at four corners, mid-points of vertices
- * and the cell centre * the interpolated surface is given by
+ * and the cell centre the interpolated surface is given by
  * \f[
  * p(t,u) = \sum_{i=0}^{2}\sum_{j=0}^{2}a_{ij}t^iu^j
  * \f]
- * The given function values matches those of the interpolated surface
+ * The given function values match those of the interpolated surface
  * at four corners, middle points and cell centre to determine 9 coefficients.
  *
  * # Reference
